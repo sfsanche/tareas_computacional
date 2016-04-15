@@ -1,14 +1,14 @@
 #Tarea 1 - Sebastian Sanchez
 
-#A) Leer el archivo de IceCube data
+#A) Read IceCube data
 data <- read.table(file="NuAstro_4yr_IceCube_Data.txt",header=1)
 
-#B) Remover entradas con datos incompletos
+#B) Remove entries with incomplete data
 discriminator <- complete.cases(data)
 data_buena    <- data[discriminator,]
 
 #C) Mean Angular resolution
-	#Metodo1: For loop
+	#Method1: For loop
 	print("Mean Angular Resolution with method 1: for loop")
 	s <- data_buena[,8:9]
 	
@@ -30,7 +30,7 @@ data_buena    <- data[discriminator,]
 	print("Track-like topologies: ")
 	print( mean(track_data[discriminator2]))
 
-	#Metodo2: with subset
+	#Method2: with subset
 	print("Mean Angular Resolution with method 2: with subset")
 	
 	print("Shower-like topologies: ")
@@ -83,10 +83,28 @@ evt_month <- function(data,month)
 dummy_date <- as.POSIXlt("2000-01-01")
 mon <- which.max(table(as.POSIXlt(data_buena$POSIX)$mon)) - 1 
 dummy_date$mon <- mon
-print("El mes con mayor cantidad de eventos es: ")
+print("The month with most events is: ")
 print(months(dummy_date))
 
 #G)Plot the events distribution by coordinates
-plot(data_buena$RA_deg , data_buena$Declination_deg )
+plot(data_buena$RA_deg , data_buena$Declination_deg, main="Event Coordinates distribution", xlab="Right Ascension (deg)", ylab="Declination (deg)")
 
-#H)An interesting quantity... Let's plot the 
+#H)An interesting quantity... Let's plot the mean error per month
+energy_error <- function(data,month)
+{
+	int <- subset(data, as.POSIXlt(POSIX_time)$mon==month, select=Ene_Err_max:Ene_Err_min)
+	int$Total_Error = int$Ene_Err_max-int$Ene_Err_min	
+	return(mean(int$Total_Error))
+}
+
+monthly_Ene_Err <- 0
+
+for(i in 1:11)
+{
+	monthly_Ene_Err[[i]] <- energy_error(data_buena,i)
+}
+
+print("Mean Energy Error per month is:")
+print(monthly_Ene_Err)
+
+
