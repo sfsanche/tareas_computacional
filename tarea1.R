@@ -104,6 +104,14 @@ for(i in 1:11)
 	monthly_Ene_Err[[i]] <- energy_error(data_buena,i)
 }
 
+months_names <- 0
+for(i in 1:11)
+{
+	dummy_date$mon    <- i-1
+	months_names[[i]] <- months(dummy_date)		
+}
+
+names(monthly_Ene_Err) <- months_names
 print("Mean Energy Error per month is:")
 print(monthly_Ene_Err)
 
